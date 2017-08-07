@@ -729,7 +729,7 @@ uint8_t readDataByte(){
 /*
  *@brief handles flip from transmit to receive
  */
-void restartTransmitAPDS(void){
+void restartTransmitAPDS(){
 	EUSCI_B_I2C_disable(EUSCI_B0_BASE);
   EUSCI_B_I2C_setSlaveAddress(EUSCI_B0_BASE, APDS9960_I2C_ADDR);
   EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_TRANSMIT_MODE);

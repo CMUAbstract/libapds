@@ -320,7 +320,7 @@ uint8_t readDataByte(void);
 int8_t processGestureData(gesture_data_t  gesture_data_);
 int8_t  getGestureLoop(gesture_data_t *gesture_data_, uint8_t *num_samps);
 gest_dir decodeGesture(void);
-void restartTransmit(void);
+void restartTransmitAPDS(void);
 void delay(uint32_t cycles);
 
 #endif
