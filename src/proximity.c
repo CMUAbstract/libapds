@@ -330,14 +330,11 @@ void enableProximitySensor(void){
 	writeDataByte(APDS9960_ENABLE,val);
 	/*Set proximity mode*/
 	restartTransmitAPDS();
-//Only enable proximity detection if we're NOT using the photoresistor
-#ifndef USE_PHOTORES
   writeSingleByte(APDS9960_ENABLE);
 	val = readDataByte();
 	val |= (1 << PROXIMITY);
 	restartTransmitAPDS();
 	writeDataByte(APDS9960_ENABLE,val);
-#endif
 	return;
 }
 
