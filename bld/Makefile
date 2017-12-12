@@ -8,9 +8,8 @@ OBJECTS = \
 
 DEPS += \
 	libmsp \
-  libio \
   libmspware \
-  libchain\
+  libfxl
 
 override SRC_ROOT = ../../src
 
