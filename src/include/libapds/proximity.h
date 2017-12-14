@@ -17,9 +17,8 @@
 #include <stdint.h>
 
 /* Debug */
-#define DEBUG                   1
 #define MY_DEBUG 								1
-#define HIGH_POW  
+#define HIGH_POW
 /* APDS-9960 I2C address */
 #define APDS9960_I2C_ADDR       0x39
 

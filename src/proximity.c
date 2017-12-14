@@ -1,17 +1,23 @@
 #include "libmspware/driverlib.h"
 #include <libmsp/mem.h>
 #include <libmsp/periph.h>
+#include <libio/console.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <libchain/chain.h>
-#include <libio/console.h>
 #include "proximity.h"
-//TODO make the pin defs defined in a makefile so this can be packaged as a lib
 #include "pins.h"
 
+#define DEBUG 0
 #if BOARD_MAJOR == 1 && BOARD_MINOR == 1
 #include <libfxl/fxl6408.h>
 #endif //BOARD.{MAJOR,MINOR}
+
+void delay(uint32_t cycles)
+{
+    unsigned i;
+    for (i = 0; i < cycles / (1U << 15); ++i)
+        __delay_cycles(1U << 15);
+}
 
 static uint8_t abs(int8_t input){
 	uint8_t output;
