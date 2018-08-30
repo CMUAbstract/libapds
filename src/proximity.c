@@ -235,6 +235,8 @@ void enable_photoresistor(void){
   // Config the ADC on the comparator pin
   GPIO(PORT_PHOTO_SENSE,SEL0) |= BIT(PIN_PHOTO_SENSE);
   GPIO(PORT_PHOTO_SENSE,SEL1) |= BIT(PIN_PHOTO_SENSE);
+#elif BOARD_MAJOR == 2
+  //TODO fix this
 #else
 #error Unsupported photoresistor config
 #endif// BOARD_{MAJOR,MINOR}
@@ -245,6 +247,8 @@ void disable_photoresistor(void){
 #if BOARD_MAJOR == 1 && BOARD_MINOR ==0
   P3OUT &= ~BIT0;
 #elif BOARD_MAJOR == 1 && BOARD_MINOR == 1
+  fxl_clear(BIT_PHOTO_SW);
+#elif BOARD_MAJOR == 2
   fxl_clear(BIT_PHOTO_SW);
 #else
 #error Unsupported photoresistor config
@@ -269,6 +273,8 @@ int16_t read_photoresistor(void){
   ADC12MCTL0 = ADC12VRSEL_1 | ADC12INCH_13;
 #elif BOARD_MAJOR == 1 && BOARD_MINOR == 1
   ADC12MCTL0 = ADC12VRSEL_1 | ADC12INCH_6;
+#elif BOARD_MAJOR == 2
+  // TODO fix this
 #else
 #error Unsupported photoresistor config
 #endif// BOARD_{MAJOR,MINOR}
