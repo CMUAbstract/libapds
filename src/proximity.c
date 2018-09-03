@@ -66,44 +66,14 @@ volatile unsigned char proximityId = 0;
 void proximity_init(void) {
 	uint8_t proximityID = 0;
 	uint8_t sensorID = 0;
-	//Already init'd i2c, now init connection to APDS
-  EUSCI_B_I2C_setSlaveAddress(EUSCI_B0_BASE, APDS9960_I2C_ADDR);
-  EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_TRANSMIT_MODE);
-
-  EUSCI_B_I2C_enable(EUSCI_B0_BASE);
-  //Might not need from here:
-  while(EUSCI_B_I2C_isBusBusy(EUSCI_B0_BASE));
-
-  //EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_TRANSMIT_MODE);
-
-  EUSCI_B_I2C_masterSendSingleByte(EUSCI_B0_BASE, APDS9960_ID);
-
-	while(EUSCI_B_I2C_isBusBusy(EUSCI_B0_BASE));
-
-	EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_RECEIVE_MODE);
-
-  EUSCI_B_I2C_masterReceiveStart(EUSCI_B0_BASE);
-
-  proximityID = EUSCI_B_I2C_masterReceiveSingle(EUSCI_B0_BASE);
-
-	EUSCI_B_I2C_masterReceiveMultiByteStop(EUSCI_B0_BASE);
-
-  while(EUSCI_B_I2C_isBusBusy(EUSCI_B0_BASE));
 	/*Transmit address and read back returned value*/
 	restartTransmitAPDS();
 	writeSingleByte(APDS9960_ID);
 	sensorID = readDataByte();
-
-	LOG2("I2C ID = %x \r\n",proximityID);
-//	LOG("I2C ID2 = %x \r\n",sensorID);
-/*
-	EUSCI_B_I2C_disable(EUSCI_B0_BASE);
-
-	EUSCI_B_I2C_setSlaveAddress(EUSCI_B0_BASE, APDS9960_I2C_ADDR);
-  EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_TRANSMIT_MODE);
-
-  EUSCI_B_I2C_enable(EUSCI_B0_BASE);
-*/
+  if(sensorID != 0xAB) {
+    PRINTF("error initializing APDS! id = %x\r\n",sensorID);
+    while(1);
+  }
 	restartTransmitAPDS();
   writeDataByte(APDS9960_ENABLE, 0);
 	/*Run through and set a bundle of defaults*/
@@ -236,7 +206,12 @@ void enable_photoresistor(void){
   GPIO(PORT_PHOTO_SENSE,SEL0) |= BIT(PIN_PHOTO_SENSE);
   GPIO(PORT_PHOTO_SENSE,SEL1) |= BIT(PIN_PHOTO_SENSE);
 #elif BOARD_MAJOR == 2
-  //TODO fix this
+  // Set GPIO HIGH to power photoresistor
+  fxl_set(BIT_PHOTO_SW);
+  // Config the ADC on the comparator pin
+  GPIO(PORT_PHOTO_SENSE,SEL0) |= BIT(PIN_PHOTO_SENSE);
+  GPIO(PORT_PHOTO_SENSE,SEL1) |= BIT(PIN_PHOTO_SENSE);
+  __delay_cycles(1000);                   // Delay for Ref to settle
 #else
 #error Unsupported photoresistor config
 #endif// BOARD_{MAJOR,MINOR}
@@ -274,7 +249,7 @@ int16_t read_photoresistor(void){
 #elif BOARD_MAJOR == 1 && BOARD_MINOR == 1
   ADC12MCTL0 = ADC12VRSEL_1 | ADC12INCH_6;
 #elif BOARD_MAJOR == 2
-  // TODO fix this
+  ADC12MCTL0 = ADC12VRSEL_1 | ADC12INCH_12;
 #else
 #error Unsupported photoresistor config
 #endif// BOARD_{MAJOR,MINOR}
@@ -393,7 +368,7 @@ int8_t  getGestureLoop(gesture_data_t *gesture_data_, uint8_t *num_samps){
 	restartTransmitAPDS();
 	writeSingleByte(APDS9960_ENABLE);
 	uint8_t enable = readDataByte();
-	//LOG("enable val = %x \r\n",enable);
+	LOG("enable val = %x \r\n",enable);
 	enable &= 0x41;
 	test &= enable;
 	if(!test){
