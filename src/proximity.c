@@ -388,7 +388,7 @@ int8_t  getGestureLoop(gesture_data_t *gesture_data_, uint8_t *num_samps){
 			writeSingleByte(APDS9960_GFLVL);
 			fifo_level = readDataByte();
 			uint8_t fifo_data[MAX_DATA_SETS * 4], i;
-			//LOG("Fifo level = %u \r\n",fifo_level);
+			LOG("Fifo level = %u \r\n",fifo_level);
 			if(fifo_level > 1 ){
 				loop_count++;
 				/*Read in all of the bytes from the fifo*/
@@ -398,12 +398,12 @@ int8_t  getGestureLoop(gesture_data_t *gesture_data_, uint8_t *num_samps){
 				EUSCI_B_I2C_masterReceiveStart(EUSCI_B0_BASE);
 
 				/*Note: we multiply by 4 to get UP,DOWN,LEFT,RIGHT captured*/
-				for(i = 0; i < fifo_level * 4; i++){
+				for(i = 0; i < fifo_level << 2; i++){
 					fifo_data[i] =  EUSCI_B_I2C_masterReceiveSingle(EUSCI_B0_BASE);
 				}
 				EUSCI_B_I2C_masterReceiveMultiByteStop(EUSCI_B0_BASE);
 				while(EUSCI_B_I2C_isBusBusy(EUSCI_B0_BASE));
-				for(i = 0; i < fifo_level*4; i+=4){
+				for(i = 0; i < fifo_level << 2; i+=4){
 					gesture_data_->u_data[gesture_data_->index] =  fifo_data[i + 0];
 					gesture_data_->d_data[gesture_data_->index] =  fifo_data[i + 1];
 					gesture_data_->l_data[gesture_data_->index] =  fifo_data[i + 2];
@@ -411,15 +411,8 @@ int8_t  getGestureLoop(gesture_data_t *gesture_data_, uint8_t *num_samps){
 					gesture_data_->index++;
 					gesture_data_->total_gestures++;
 				}
-				//LOG("Fifo level = %u , total gestures = %u\r\n", fifo_level,
-				/*																								gesture_data_->total_gestures);
-				for(i = 0; i < fifo_level * 4; i++){
-					LOG("%u ", fifo_data[i]);
-				}
-          */
-				//LOG("\r\n");
 			}
-
+        /*
 				LOG("ESCAPED!\r\n");
 				restartTransmitAPDS();
 				writeSingleByte(APDS9960_GCONF1);
@@ -428,7 +421,7 @@ int8_t  getGestureLoop(gesture_data_t *gesture_data_, uint8_t *num_samps){
 				restartTransmitAPDS();
 				writeSingleByte(APDS9960_GEXTH);
 				fifo_level = readDataByte();
-				LOG("GEXTH = %u \r\n", fifo_level);
+				LOG("GEXTH = %u \r\n", fifo_level);*/
 				//TODO fix the reversed logic in processGestureData
 				if(processGestureData(*gesture_data_) >= 0){
 						//LOG("Decoding gesture! \r\n");
@@ -756,9 +749,7 @@ int8_t processGestureData(gesture_data_t gesture_data_) {
 	LOG("PROCESSING GESTURE \r\n");
 	/* If we have less than 4 total gestures, that's not enough */
 	if( gesture_data_.total_gestures <= 4 ) {
-#if DEBUG
 		LOG("TOO FEW GESTURES got %u  \r\n", gesture_data_.total_gestures);
-#endif
 		return -1;
 	}
 
@@ -852,6 +843,7 @@ int8_t processGestureData(gesture_data_t gesture_data_) {
 #endif
     }
 
+
     /* Calculate the first vs. last ratio of up/down and left/right */
 	int16_t num, denom;
 	LOG("calculating ratios \r\n");
@@ -901,7 +893,6 @@ int8_t processGestureData(gesture_data_t gesture_data_) {
     LOG("UD: %i \r\n", gesture_ud_delta_);
     LOG(" LR:  %i \r\n", gesture_lr_delta_);
 #endif
-
 
     /* Determine U/D gesture */
     if( gesture_ud_delta_ >= GESTURE_SENSITIVITY_1 ) {
@@ -957,7 +948,6 @@ int8_t processGestureData(gesture_data_t gesture_data_) {
             }
         }
     }
-
 #if DEBUG
     LOG("UD_CT: %i \r\n",gesture_ud_count_);
     LOG(" LR_CT: %i \r\n", gesture_lr_count_);
