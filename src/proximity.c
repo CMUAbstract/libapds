@@ -364,7 +364,7 @@ int8_t  getGestureLoop(gesture_data_t *gesture_data_, uint8_t *num_samps){
 	uint8_t test = readDataByte();
 	test &= APDS9960_GVALID;
 	//This NEEDS to be here, TODO turn this into a delay instead
-  PRINTF("Gvalid  val= %x \r\n",test);
+  //PRINTF("Gvalid  val= %x \r\n",test);
 	restartTransmitAPDS();
 	writeSingleByte(APDS9960_ENABLE);
 	uint8_t enable = readDataByte();
@@ -739,8 +739,6 @@ int8_t processGestureData(gesture_data_t gesture_data_) {
 	int ud_delta;
 	int lr_delta;
 	int i;
-	gesture_ud_delta_ = 0;
-	gesture_lr_delta_ = 0;
 
 	gesture_ud_count_ = 0;
 	gesture_lr_count_ = 0;
@@ -782,7 +780,7 @@ int8_t processGestureData(gesture_data_t gesture_data_) {
 		/* If one of the _first values is 0, then there is no good data */
 		if( (u_first == 0) || (d_first == 0) || \
 				(l_first == 0) || (r_first == 0) ) {
-#if 1
+#if 0
 				LOG("NO GOOD DATA :( \r\n");
 #endif
 				return -1;
@@ -823,6 +821,9 @@ int8_t processGestureData(gesture_data_t gesture_data_) {
       }
     }
 
+  gesture_ud_delta_ = 0;
+	gesture_lr_delta_ = 0;
+
 
     /* Calculate the first vs. last ratio of up/down and left/right */
 	int16_t num, denom;
@@ -847,7 +848,7 @@ int8_t processGestureData(gesture_data_t gesture_data_) {
   ud_delta = ud_ratio_last - ud_ratio_first;
   lr_delta = lr_ratio_last - lr_ratio_first;
 
-#if DEBUG
+#if 0
     LOG("Deltas: \r\n");
     LOG("UD: %i \r\n", ud_delta);
     LOG(" LR: %i \r\n", lr_delta);
@@ -857,7 +858,7 @@ int8_t processGestureData(gesture_data_t gesture_data_) {
     gesture_ud_delta_ += ud_delta;
     gesture_lr_delta_ += lr_delta;
 
-#if DEBUG
+#if 0
     LOG("Accumulations: \r\n");
     LOG("UD: %i \r\n", gesture_ud_delta_);
     LOG(" LR:  %i \r\n", gesture_lr_delta_);
@@ -932,12 +933,17 @@ gest_dir decodeGesture(void){
     /* Return if near or far event is detected */
     if( gesture_state_ == NEAR_STATE ) {
         gesture_motion_ = DIR_NEAR;
+        PRINTF("Error! returning near\r\n");
         return true;
     } else if ( gesture_state_ == FAR_STATE ) {
         gesture_motion_ = DIR_FAR;
+        PRINTF("Error! returning far\r\n");
         return true;
     }
-
+    __delay_cycles(2000);
+    LOG2("ABS(UD):%u,  ABS(LR):%u, raw %i %i\r\n",
+    abs16(gesture_ud_delta_),abs16(gesture_lr_delta_),
+    gesture_ud_delta_,gesture_lr_delta_);
 		/*New way to determine swipe direction... */
 		if( abs16(gesture_ud_delta_) > abs16(gesture_lr_delta_)){
 			gesture_motion_ = gesture_ud_delta_ > 0 ? DIR_DOWN : DIR_UP;
