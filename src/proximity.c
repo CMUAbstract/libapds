@@ -270,6 +270,9 @@ int16_t read_photoresistor(void){
   ADC12CTL0 &= ~ADC12ENC;                 // Disable conversions
   ADC12CTL0 &= ~(ADC12ON);                // Shutdown ADC12
   REFCTL0 &= ~REFON;
+  // TODO: temp fix for Clang
+  // R15 never needs to be saved, right?
+  __asm__ volatile ("MOV R12, R15");
   return output;
 }
 
