@@ -1,5 +1,4 @@
-/**
- * @file    SparkFun_APDS-9960.h
+/** * @file    SparkFun_APDS-9960.h
  * @brief   Library for the SparkFun APDS-9960 breakout board
  * @author  Shawn Hymel (SparkFun Electronics)
  *					Modified by Emily Ruppel for use on the MSP430
@@ -18,7 +17,7 @@
 
 /* Debug */
 #define MY_DEBUG 								1
-#define HIGH_POW
+//#define HIGH_POW
 /* APDS-9960 I2C address */
 #define APDS9960_I2C_ADDR       0x39
 
@@ -276,6 +275,7 @@ int gesture_motion_;
     #define ALERT_THRESH 30
   #endif
 #else
+  //#define ALERT_THRESH 3900
   #define ALERT_THRESH 3400
   //#define ALERT_THRESH 1200
   //#define ALERT_THRESH 2500
