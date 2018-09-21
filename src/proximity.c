@@ -272,7 +272,7 @@ int16_t read_photoresistor(void){
   REFCTL0 &= ~REFON;
   // TODO: temp fix for Clang
   // R15 never needs to be saved, right?
-  __asm__ volatile ("MOV R12, R15");
+  //__asm__ volatile ("MOV R12, R15");
   return output;
 }
 
