@@ -602,22 +602,22 @@ int8_t anomalyCheck(uint8_t sample, uint8_t baseline, uint8_t allowedDev){
  *@details analogous to wirewritedatabyte in wire.h
  */
 void writeDataByte(uint8_t reg, uint8_t val){
-  EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_TRANSMIT_MODE);
-  EUSCI_B_I2C_masterSendStart(EUSCI_B0_BASE);
-  EUSCI_B_I2C_masterSendMultiByteNext(EUSCI_B0_BASE, reg);
-  EUSCI_B_I2C_masterSendMultiByteNext(EUSCI_B0_BASE, val);
-  EUSCI_B_I2C_masterSendMultiByteStop(EUSCI_B0_BASE);
-  while(EUSCI_B_I2C_isBusBusy(EUSCI_B0_BASE));
-	return;
+    EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_TRANSMIT_MODE);
+    EUSCI_B_I2C_masterSendStart(EUSCI_B0_BASE);
+    EUSCI_B_I2C_masterSendMultiByteNext(EUSCI_B0_BASE, reg);
+    EUSCI_B_I2C_masterSendMultiByteNext(EUSCI_B0_BASE, val);
+    EUSCI_B_I2C_masterSendMultiByteStop(EUSCI_B0_BASE);
+    while(EUSCI_B_I2C_isBusBusy(EUSCI_B0_BASE));
+    return;
 }
 /*
  *@brief writes a single value over i2c with appropriate waiting etc
  */
 void writeSingleByte(uint8_t val){
-  EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_TRANSMIT_MODE);
-  EUSCI_B_I2C_masterSendSingleByte(EUSCI_B0_BASE, val);
-  while(EUSCI_B_I2C_isBusBusy(EUSCI_B0_BASE));
-	return;
+    EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_TRANSMIT_MODE);
+    EUSCI_B_I2C_masterSendSingleByte(EUSCI_B0_BASE, val);
+    while(EUSCI_B_I2C_isBusBusy(EUSCI_B0_BASE));
+    return;
 }
 
 /*
@@ -626,10 +626,10 @@ void writeSingleByte(uint8_t val){
 uint8_t readDataByte(){
 	uint8_t val;
 	EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_RECEIVE_MODE);
-  EUSCI_B_I2C_masterReceiveStart(EUSCI_B0_BASE);
-  val = EUSCI_B_I2C_masterReceiveSingle(EUSCI_B0_BASE);
-  EUSCI_B_I2C_masterReceiveMultiByteStop(EUSCI_B0_BASE);
-  while(EUSCI_B_I2C_isBusBusy(EUSCI_B0_BASE));
+    EUSCI_B_I2C_masterReceiveStart(EUSCI_B0_BASE);
+    val = EUSCI_B_I2C_masterReceiveSingle(EUSCI_B0_BASE);
+    EUSCI_B_I2C_masterReceiveMultiByteStop(EUSCI_B0_BASE);
+    while(EUSCI_B_I2C_isBusBusy(EUSCI_B0_BASE));
 	return val;
 }
 
@@ -638,9 +638,9 @@ uint8_t readDataByte(){
  */
 void restartTransmitAPDS(){
 	EUSCI_B_I2C_disable(EUSCI_B0_BASE);
-  EUSCI_B_I2C_setSlaveAddress(EUSCI_B0_BASE, APDS9960_I2C_ADDR);
-  EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_TRANSMIT_MODE);
-  EUSCI_B_I2C_enable(EUSCI_B0_BASE);
+    EUSCI_B_I2C_setSlaveAddress(EUSCI_B0_BASE, APDS9960_I2C_ADDR);
+    EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_TRANSMIT_MODE);
+    EUSCI_B_I2C_enable(EUSCI_B0_BASE);
 //  EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_TRANSMIT_MODE);
 
 	while(EUSCI_B_I2C_isBusBusy(EUSCI_B0_BASE));
