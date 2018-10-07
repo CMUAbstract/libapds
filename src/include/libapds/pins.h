@@ -46,7 +46,6 @@
 #define BIT_RADIO_SW  (1 << 7)
 
 #elif BOARD_MAJOR == 2
-#warning "Board major = 2!!"
 #define BIT_HMC_DRDY (1 << 0)
 #define BIT_LSM_INT1 (1 << 1)
 #define BIT_LSM_INT2 (1 << 2)
