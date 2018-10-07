@@ -531,7 +531,7 @@ void enableGesture(void){
 	writeDataByte(APDS9960_ENABLE, val);
 	restartTransmitAPDS();
 	writeSingleByte(APDS9960_ENABLE);
-	test = readDataByte();
+	readDataByte();
 	LOG("Confirmed write %x to ENABLE \r\n");
 	//EUSCI_B_I2C_disable(EUSCI_B0_BASE);
 	return ;
