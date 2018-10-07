@@ -1,0 +1,9 @@
+ifeq ($(TOOLCHAIN),gcc)
+DEPS += libapds
+else
+
+CFLAGS += -I$(LIB_ROOT)/libapds/src/include
+LFLAGS += -L$(LIB_ROOT)/libapds/bld/gcc
+LIBS += -lapds
+
+endif

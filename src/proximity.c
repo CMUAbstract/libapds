@@ -8,7 +8,8 @@
 #include "pins.h"
 
 #define DEBUG 0
-#if BOARD_MAJOR == 1 && BOARD_MINOR == 1
+#if (BOARD_MAJOR == 1 && BOARD_MINOR == 1) \
+  || (BOARD_MAJOR == 2 && BOARD_MINOR == 0)
 #include <libfxl/fxl6408.h>
 #endif //BOARD.{MAJOR,MINOR}
 
@@ -19,14 +20,6 @@ void delay(uint32_t cycles)
         __delay_cycles(1U << 15);
 }
 
-static uint8_t abs(int8_t input){
-	uint8_t output;
-	if(input < 0){
-		input = 0 - input;
-	}
-	output = (uint8_t) input;
-	return output;
-}
 
 static int16_t abs16(int16_t input){
 	int16_t output;
@@ -62,9 +55,7 @@ static int16_t div(int16_t num, int16_t denom){
 }
 
 
-volatile unsigned char proximityId = 0;
 void proximity_init(void) {
-	uint8_t proximityID = 0;
 	uint8_t sensorID = 0;
 	/*Transmit address and read back returned value*/
 	restartTransmitAPDS();
@@ -162,7 +153,7 @@ void proximity_init(void) {
 	/*Sanity check on GCONF2*/
 	restartTransmitAPDS();
 	writeSingleByte(APDS9960_GCONF2);
-	uint8_t test = readDataByte();
+	//uint8_t test = readDataByte();
 	//LOG("Gconf = %x \r\n",test);
 	/*enable gesture interrupt with default val*/
 	restartTransmitAPDS();
@@ -300,7 +291,6 @@ void enableProximitySensor(void){
 	restartTransmitAPDS();
 	writeSingleByte(APDS9960_ENABLE);
 	val = readDataByte();
-	uint8_t enable = 0;
 	val &= 0xDF;
 	restartTransmitAPDS();
 	writeDataByte(APDS9960_CONTROL, val);
@@ -357,7 +347,7 @@ int8_t  getGestureLoop(gesture_data_t *gesture_data_, uint8_t *num_samps){
 	EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_TRANSMIT_MODE);
   EUSCI_B_I2C_enable(EUSCI_B0_BASE);
 	writeSingleByte(APDS9960_ID);
-	uint8_t check = readDataByte();
+	readDataByte();
 	//LOG("ID Check = %x \r\n",check);
 	restartTransmitAPDS();
 	writeSingleByte(APDS9960_GSTATUS); //Check gstatus!
@@ -455,7 +445,7 @@ void resetGestureFields(gesture_data_t *gesture){
 }
 
 void enableGesture(void){
-	uint8_t val, boost, enable, mode,test;
+	uint8_t val, boost, enable, mode;
 	restartTransmitAPDS();
 	/*Write 0 to ENABLE*/
 	//writeDataByte(APDS9960_ENABLE, 0);
@@ -477,7 +467,7 @@ void enableGesture(void){
 	writeDataByte(APDS9960_CONFIG2, val);
 	restartTransmitAPDS();
 	writeSingleByte(APDS9960_CONFIG2);
-	test = readDataByte();
+	readDataByte();
 	//LOG("Confirmed Config2 = %x \r\n",test);
 
 	/*Enable gesture interrupt... for now*/

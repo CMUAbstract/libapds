@@ -5,11 +5,13 @@ LIB = libapds
 
 OBJECTS = \
 	proximity.o \
+  gesture.o \
 
 DEPS += \
 	libmsp \
   libmspware \
-  libfxl
+  libfxl \
+  libcapybara
 
 override SRC_ROOT = ../../src
 
