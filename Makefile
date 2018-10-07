@@ -1,8 +1,9 @@
 LIB = libapds
 
-OBJECTS = proximity.o
+OBJECTS = proximity.o \
+          gesture.o
 
-DEPS += libmsp libmspware libio libfxl
+DEPS += libmsp libmspware libio libfxl libcapybara
 
 override SRC_ROOT = ../../src
 
