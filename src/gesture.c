@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <libfxl/fxl6408.h>
 #include <libcapybara/board.h>
+#include <libio/console.h>
 #include "gesture.h"
 #include "proximity.h"
 

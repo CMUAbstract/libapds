@@ -275,6 +275,7 @@ int gesture_motion_;
     #define ALERT_THRESH 30
   #endif
 #else
+  #define LOW_OUTPUT 10
   //#define ALERT_THRESH 3900
   #define ALERT_THRESH 3400
   //#define ALERT_THRESH 1200
