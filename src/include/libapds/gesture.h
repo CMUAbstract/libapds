@@ -16,7 +16,6 @@ void apds_disable(void);
 
 // Function for capturing gesture direction once apds is already initialized
 gest_dir apds_get_gesture(void);
-void apds_get_raw_gesture(gesture_data_t *gesture_data_, uint8_t *num_samps);
 
 // Board specific function to clear out the apds registers after running a gesture
 // Note: primarily necessary for testing under continuous power

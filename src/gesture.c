@@ -48,12 +48,6 @@ gest_dir apds_get_gesture() {
   return gest_out;
 }
 
-void apds_get_raw_gesture(gesture_data_t *gesture_data_, uint8_t *num_samps) {
-  reenableGesture();
-  resetGestureFields(&gesture_data_);
-  getGestureLoop(gesture_data_, num_samps);
-}
-
 void apds_settle() {
 #if (BOARD_MAJOR == 2 && BOARD_MINOR == 0)
   fxl_set(BIT_SENSE_SW);
