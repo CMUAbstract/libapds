@@ -63,7 +63,11 @@ void proximity_init(void) {
 	sensorID = readDataByte();
   if(sensorID != 0xAB) {
     PRINTF("error initializing APDS! id = %x\r\n",sensorID);
-    while(1);
+    while(sensorID != 0xAB) {
+      restartTransmitAPDS();
+      writeSingleByte(APDS9960_ID);
+      sensorID = readDataByte();
+    }
   }
 	restartTransmitAPDS();
   writeDataByte(APDS9960_ENABLE, 0);
