@@ -340,8 +340,18 @@ uint8_t readProximity(){
 	//val = readDataByte();
 	return val ;
 }
+	
+	uint16_t raw_index_internal;
+	__nv uint8_t raw_sample_array_internal[4][512];
+	
+void redirectRawGesture(uint8_t *** sample_array, uint16_t *sample_idx) {
+	*sample_array = &raw_sample_array_internal;
+	*sample_idx = raw_index_internal;	
+	return;
+}
 
 int8_t  getGestureLoop(gesture_data_t *gesture_data_, uint8_t *num_samps){
+	raw_index_internal = 0;
 	/*Test if a gesture is available*/
 //	restartTransmitAPDS();
   //LOG("Inside get gesture! \r\n");
@@ -723,8 +733,18 @@ int8_t processGestureData(gesture_data_t gesture_data_) {
 						LOG("%u,", gesture_data_.r_data[i]);
       }
 			LOG("\r\n");
-
+			//global index writes into array passed by programmer
 #endif
+			//global index writes into array passed by programmer
+			for(int i = 0; i < gesture_data_.total_gestures; i++)
+			{
+				raw_sample_array_internal[0][i + raw_index_internal] = gesture_data_.u_data[i];
+				raw_sample_array_internal[1][i + raw_index_internal] = gesture_data_.d_data[i];
+				raw_sample_array_internal[2][i + raw_index_internal] = gesture_data_.l_data[i];
+				raw_sample_array_internal[3][i + raw_index_internal] = gesture_data_.r_data[i];
+			}
+			raw_index_internal += gesture_data_.total_gestures;
+
 			/* Find the last value in U/D/L/R above the threshold */
 			for( i = gesture_data_.total_gestures - 1; i >= 0; i-- ) {
 				if( (gesture_data_.u_data[i] > GESTURE_THRESHOLD_OUT) &&

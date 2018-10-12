@@ -323,4 +323,6 @@ gest_dir decodeGesture(void);
 void restartTransmitAPDS(void);
 void delay(uint32_t cycles);
 
+void redirectRawGesture(uint8_t *** sample_array, uint16_t *sample_idx);
+
 #endif

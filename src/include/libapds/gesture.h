@@ -14,6 +14,9 @@ void apds_init(void);
 // Note: for capybara v2 this disables the entire rail and resets the fxl6408
 void apds_disable(void);
 
+// Function for capturing raw gesture data once apds is initialized
+int16_t apds_get_raw_gesture(uint8_t *** sample_array);
+
 // Function for capturing gesture direction once apds is already initialized
 gest_dir apds_get_gesture(void);
 

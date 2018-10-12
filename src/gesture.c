@@ -31,6 +31,19 @@ void apds_disable() {
   return;
 }
 
+int16_t apds_get_raw_gesture(uint8_t ***sample_array) {
+	gesture_data_t gesture_data_;
+	uint8_t num_samps;
+	uint16_t sample_idx;
+  getGestureLoop(&gesture_data_, &num_samps);
+	redirectRawGesture(sample_array, &sample_idx); 
+  apds_disable();
+  if(num_samps > MIN_DATA_SETS) {
+    return sample_idx;
+  }
+  return 0;
+}
+
 gest_dir apds_get_gesture() {
   gest_dir gest_out;
   uint8_t num_samps = 0;
