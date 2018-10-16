@@ -271,18 +271,15 @@ int gesture_motion_;
 #ifndef USE_PHOTORES
   #ifndef HIGH_POW
     #define ALERT_THRESH 10
+    #define CLOSE_OBJECT 10
   #else
     #define ALERT_THRESH 30
+    #define CLOSE_OBJECT 30
   #endif
 #else
   #define LOW_OUTPUT 10
-  //#define ALERT_THRESH 3900
   #define ALERT_THRESH 3400
-  //#define ALERT_THRESH 1200
-  //#define ALERT_THRESH 2500
-  //#define ALERT_THRESH 2000
-  //#define ALERT_THRESH 2200
-  // #define ALERT_THRESH 1700
+  #define CLOSE_OBJECT 3400
 #endif
 
 #define MIN_DATA_SETS 1
