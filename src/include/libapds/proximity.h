@@ -278,8 +278,11 @@ int gesture_motion_;
   #endif
 #else
   #define LOW_OUTPUT 10
-  #define ALERT_THRESH 3400
-  #define CLOSE_OBJECT 3400
+	// TODO fix the hardcoded value...
+  #define ALERT_THRESH 400
+  #define CLOSE_OBJECT 400
+  //#define ALERT_THRESH 3400
+  //#define CLOSE_OBJECT 3400
 #endif
 
 #define MIN_DATA_SETS 1
