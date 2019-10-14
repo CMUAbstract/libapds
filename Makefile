@@ -1,7 +1,8 @@
 LIB = libapds
 
 OBJECTS = proximity.o \
-          gesture.o
+          gesture.o \
+          color.o
 
 DEPS += libmsp libmspware libio libfxl libcapybara
 
