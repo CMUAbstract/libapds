@@ -2,7 +2,8 @@
 #include <libio/console.h>
 #include "color.h"
 #include "proximity.h"
-
+#include <libfxl/fxl6408.h>
+#include <libcapybara/board.h>
 
 
 void apds_color_init() {
@@ -88,4 +89,12 @@ void apds_read_color(uint16_t *r, uint16_t *g, uint16_t *b, uint16_t *c) {
 return;
 }
 
-
+void apds_color_disable() {
+  restartTransmitAPDS();
+  // Turn off apds
+  // TODO make this less ham-handed. It currently disables everything, not just
+  // color
+  writeDataByte(APDS9960_ENABLE, 0);
+  fxl_clear(BIT_APDS_SW);
+  return;
+}

@@ -296,13 +296,15 @@ int gesture_motion_;
 #define GESTURE_HOLD_TIME  4800000
 /*Helper functions for handling proximity sensor*/
 void proximity_init(void);
+void proximity_init_ldrive(uint8_t drive);
 int8_t  getGesture(gesture_data_t *gesture_data_, uint8_t *num_samps);
 void enableGesture(void);
+void enableGesture_boost(uint8_t boost);
 void reenableGesture(void);
 void disableGesture(void);
 void resetGestureFields(gesture_data_t *gesture);
 void enableProximitySensor(void);
-void disable_photoresistor(void); 
+void enableProximitySensor_ldrive(uint8_t ldrive);
 uint8_t readProximity(void);
 
 /*Helper functions for reading from photoresistor*/
