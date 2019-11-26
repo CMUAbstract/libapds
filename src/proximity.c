@@ -497,22 +497,8 @@ void enableProximitySensor(void){
 uint8_t readProximity(){
 	uint8_t val = 0;
 	restartTransmitAPDS();
-	//LOG("Waiting on write2 \r\n");
 	writeSingleByte(APDS9960_PDATA);
-	//LOG("Waiting on read2 \r\n");
-	/*Begin added section*/
-	EUSCI_B_I2C_disable(EUSCI_B0_BASE);
-  EUSCI_B_I2C_setSlaveAddress(EUSCI_B0_BASE, APDS9960_I2C_ADDR);
-  EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_RECEIVE_MODE);
-  EUSCI_B_I2C_enable(EUSCI_B0_BASE);
-  EUSCI_B_I2C_masterReceiveStart(EUSCI_B0_BASE);
-//	LOG("Waiting on read3 \r\n");
-  val = EUSCI_B_I2C_masterReceiveSingle(EUSCI_B0_BASE);
-//	LOG("Waiting on read4 \r\n");
-  EUSCI_B_I2C_masterReceiveMultiByteStop(EUSCI_B0_BASE);
-
-	/*End added section*/
-	//val = readDataByte();
+	val = readDataByte();
 	return val ;
 }
 	
@@ -623,6 +609,73 @@ int8_t  getGestureLoop(gesture_data_t *gesture_data_, uint8_t *num_samps){
 
 		}
     PRINTF("Fell out\r\n");
+}
+
+int8_t  getGestureSingle(gesture_data_t *gesture_data_, uint8_t *num_samps){
+	raw_index_internal = 0;
+  EUSCI_B_I2C_disable(EUSCI_B0_BASE);
+	EUSCI_B_I2C_setSlaveAddress(EUSCI_B0_BASE, APDS9960_I2C_ADDR);
+  while(EUSCI_B_I2C_isBusBusy(EUSCI_B0_BASE));
+	EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_TRANSMIT_MODE);
+  EUSCI_B_I2C_enable(EUSCI_B0_BASE);
+	writeSingleByte(APDS9960_ID);
+	readDataByte();
+	//LOG("ID Check = %x \r\n",check);
+	restartTransmitAPDS();
+	writeSingleByte(APDS9960_GSTATUS); //Check gstatus!
+	uint8_t test = readDataByte();
+	test &= APDS9960_GVALID;
+	restartTransmitAPDS();
+	writeSingleByte(APDS9960_ENABLE);
+	uint8_t enable = readDataByte();
+	//This NEEDS to be here, TODO turn this into a delay instead
+	LOG("enable val = %x \r\n",enable);
+	enable &= 0x41;
+	test &= enable;
+	if(!test){
+		return DIR_NONE;
+	}
+  uint8_t fifo_level = 0;
+  restartTransmitAPDS();
+  writeSingleByte(APDS9960_GSTATUS);
+  uint8_t gstatus = readDataByte();
+  LOG2("gstatus val 1 = %x \r\n",gstatus);
+  restartTransmitAPDS();
+  writeSingleByte(APDS9960_GFLVL);
+  fifo_level = readDataByte();
+  uint8_t fifo_data[MAX_DATA_SETS << 2], i;
+  LOG2("Fifo level = %u \r\n",fifo_level);
+  if(fifo_level > 1 ){
+    /*Read in all of the bytes from the fifo*/
+    restartTransmitAPDS();
+    writeSingleByte(APDS9960_GFIFO_U);
+    EUSCI_B_I2C_setMode(EUSCI_B0_BASE, EUSCI_B_I2C_RECEIVE_MODE);
+    EUSCI_B_I2C_masterReceiveStart(EUSCI_B0_BASE);
+
+    /*Note: we multiply by 4 to get UP,DOWN,LEFT,RIGHT captured*/
+    for(i = 0; i < fifo_level << 2; i++){
+      fifo_data[i] =  EUSCI_B_I2C_masterReceiveSingle(EUSCI_B0_BASE);
+    }
+    EUSCI_B_I2C_masterReceiveMultiByteStop(EUSCI_B0_BASE);
+    while(EUSCI_B_I2C_isBusBusy(EUSCI_B0_BASE));
+    for(i = 0; i < fifo_level << 2; i+=4){
+      gesture_data_->u_data[gesture_data_->index] =  fifo_data[i + 0];
+      gesture_data_->d_data[gesture_data_->index] =  fifo_data[i + 1];
+      gesture_data_->l_data[gesture_data_->index] =  fifo_data[i + 2];
+      gesture_data_->r_data[gesture_data_->index] =  fifo_data[i + 3];
+      gesture_data_->index++;
+      gesture_data_->total_gestures++;
+    }
+  }
+    int8_t temp;
+    //TODO fix the reversed logic in processGestureData
+    temp = processGestureData(*gesture_data_);
+    if( temp ) {
+      *num_samps = 0;
+      return gesture_motion_;
+    }
+    *num_samps = 1;
+    return  gesture_motion_;
 }
 
 
@@ -806,7 +859,7 @@ void enableGesture(void){
 	val = readDataByte();
 	//LOG("ENABLE = %x \r\n", val);
 	val |= (1 << GESTURE);
-	//LOG("Writing %x to ENABLE \r\n", val);
+	LOG("Writing %x to ENABLE \r\n", val);
 	restartTransmitAPDS();
 	writeDataByte(APDS9960_ENABLE, val);
 	restartTransmitAPDS();
@@ -816,25 +869,26 @@ void enableGesture(void){
 	//EUSCI_B_I2C_disable(EUSCI_B0_BASE);
 	return ;
 }
-
 void disableGesture(){
 	restartTransmitAPDS();
-	writeSingleByte(APDS9960_ENABLE);
+  writeDataByte(APDS9960_ENABLE,0x1);
+	/*writeSingleByte(APDS9960_ENABLE);
 	uint8_t val = readDataByte();
 	val &= ~(1 << GESTURE);
 	restartTransmitAPDS();
 	writeDataByte(APDS9960_ENABLE, val);
-//	LOG("New enable = %x \r\n", val);
+//	LOG("New enable = %x \r\n", val);*/
 	return;
 }
 
 void reenableGesture(){
 	restartTransmitAPDS();
-	writeSingleByte(APDS9960_ENABLE);
+  writeDataByte(APDS9960_ENABLE,0x41);
+	/*writeSingleByte(APDS9960_ENABLE);
 	uint8_t val = readDataByte();
 	val |= (1 << GESTURE);
 	restartTransmitAPDS();
-	writeDataByte(APDS9960_ENABLE, val);
+	writeDataByte(APDS9960_ENABLE, val);*/
 	return;
 }
 
@@ -947,7 +1001,7 @@ int8_t processGestureData(gesture_data_t gesture_data_) {
 	LOG2("PROCESSING GESTURE \r\n");
 	/* If we have less than 4 total gestures, that's not enough */
 	if( gesture_data_.total_gestures <= 4 ) {
-		LOG("TOO FEW GESTURES got %u  \r\n", gesture_data_.total_gestures);
+		LOG2("TOO FEW GESTURES got %u  \r\n", gesture_data_.total_gestures);
 		return -1;
 	}
 
@@ -1069,7 +1123,7 @@ int8_t processGestureData(gesture_data_t gesture_data_) {
     LOG(" LR:  %i \r\n", gesture_lr_delta_);
 #endif
 
-    return -1;
+    return 0;
 }
 
 gest_dir decodeGesture(void){
@@ -1100,3 +1154,12 @@ gest_dir decodeGesture(void){
 	 return gesture_motion_;
 }
 
+void apds_proximity_reenable() {
+  restartTransmitAPDS();
+  writeDataByte(APDS9960_ENABLE, 0x5);
+}
+
+void apds_proximity_disable() {
+  restartTransmitAPDS();
+  writeDataByte(APDS9960_ENABLE, 0x1);
+}

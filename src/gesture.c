@@ -61,6 +61,21 @@ gest_dir apds_get_gesture() {
   return gest_out;
 }
 
+gest_dir apds_measure_once() {
+  gest_dir gest_out;
+  uint8_t num_samps = 0, result = 0;
+  gesture_data_t gesture_data_;
+  resetGestureFields(&gesture_data_);
+  result = getGestureSingle(&gesture_data_, &num_samps);
+  if(result) {
+    gest_out = decodeGesture();
+  }
+  else {
+    gest_out = DIR_NONE;
+  }
+  return gest_out;
+}
+
 void apds_settle() {
 #if (BOARD_MAJOR == 2 && BOARD_MINOR == 0)
   fxl_set(BIT_SENSE_SW);

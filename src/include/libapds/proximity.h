@@ -307,6 +307,9 @@ void enableProximitySensor(void);
 void enableProximitySensor_ldrive(uint8_t ldrive);
 uint8_t readProximity(void);
 
+void apds_proximity_disable() ;
+void apds_proximity_reenable();
+
 /*Helper functions for reading from photoresistor*/
 void enable_photoresistor(void);
 void disable_photoresistor(void); 
@@ -326,5 +329,6 @@ void restartTransmitAPDS(void);
 void delay(uint32_t cycles);
 
 void redirectRawGesture(uint8_t *** sample_array, uint16_t *sample_idx);
+int8_t getGestureSingle(gesture_data_t *gesture_data_, uint8_t *num_samps);
 
 #endif

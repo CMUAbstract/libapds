@@ -24,4 +24,6 @@ gest_dir apds_get_gesture(void);
 // Note: primarily necessary for testing under continuous power
 void apds_settle(void);
 
+gest_dir apds_measure_once();
+
 #endif
