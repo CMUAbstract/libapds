@@ -31,6 +31,32 @@ void apds_color_init() {
   writeDataByte(APDS9960_ENABLE, 3);
 }
 
+float apds_read_r(void) {
+	uint16_t r;
+  uint8_t temp_l, temp_h;
+  uint8_t status;
+  restartTransmitAPDS();
+  writeSingleByte(APDS9960_STATUS);
+  status = readDataByte();
+  while(!(status & COLOR_MASK)) {
+    __delay_cycles(100);
+    restartTransmitAPDS();
+    writeSingleByte(APDS9960_STATUS);
+    status = readDataByte();
+  }
+
+  restartTransmitAPDS();
+  writeSingleByte(APDS9960_RDATAL);
+  temp_l = readDataByte();
+
+  restartTransmitAPDS();
+  writeSingleByte(APDS9960_RDATAH);
+  temp_h = readDataByte();
+
+  r = (temp_h << 8) + temp_l;
+	return (float)r;
+}
+
 void apds_dummy_read_color(uint16_t *r, uint16_t *g, uint16_t *b, uint16_t *c) {
   uint8_t temp_l, temp_h;
   uint8_t status;

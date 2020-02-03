@@ -501,7 +501,15 @@ uint8_t readProximity(){
 	val = readDataByte();
 	return val ;
 }
-	
+
+float proximity_read() {
+	uint8_t val = 0;
+	restartTransmitAPDS();
+	writeSingleByte(APDS9960_PDATA);
+	val = readDataByte();
+	return (float)val;
+}
+
 	uint16_t raw_index_internal;
 	__nv uint8_t raw_sample_array_internal[4][512];
 	
