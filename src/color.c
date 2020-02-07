@@ -39,7 +39,7 @@ float apds_read_r(void) {
   writeSingleByte(APDS9960_STATUS);
   status = readDataByte();
   while(!(status & COLOR_MASK)) {
-    __delay_cycles(100);
+    __delay_cycles(10);
     restartTransmitAPDS();
     writeSingleByte(APDS9960_STATUS);
     status = readDataByte();
