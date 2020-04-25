@@ -235,11 +235,21 @@ void enableProximitySensor(void){
 	return;
 }
 
+//TODO figure out why the float returned here seems to get clobbered
 float proximity_read() {
 	uint8_t val = 0;
 	restartTransmit();
 	writeSingle(APDS9960_PDATA);
 	val = readByte();
-	return (float)val;
+  float ret_val = val;
+	return ret_val;
+}
+
+uint8_t proximity_read_byte() {
+	uint8_t val = 0;
+	restartTransmit();
+	writeSingle(APDS9960_PDATA);
+	val = readByte();
+	return val;
 }
 

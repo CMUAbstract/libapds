@@ -331,4 +331,5 @@ void delay(uint32_t cycles);
 void redirectRawGesture(uint8_t *** sample_array, uint16_t *sample_idx);
 int8_t getGestureSingle(gesture_data_t *gesture_data_, uint8_t *num_samps);
 float proximity_read(void);
+uint8_t proximity_read_byte(void);
 #endif
