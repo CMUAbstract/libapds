@@ -979,12 +979,3 @@ gest_dir decodeGesture(void){
 	 return gesture_motion_;
 }
 
-void apds_proximity_reenable() {
-  restartTransmitAPDS();
-  writeDataByte(APDS9960_ENABLE, 0x5);
-}
-
-void apds_proximity_disable() {
-  restartTransmitAPDS();
-  writeDataByte(APDS9960_ENABLE, 0x1);
-}

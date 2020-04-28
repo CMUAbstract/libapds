@@ -253,3 +253,12 @@ uint8_t proximity_read_byte() {
 	return val;
 }
 
+void apds_proximity_reenable() {
+  restartTransmit();
+  writeByte(APDS9960_ENABLE, 0x5);
+}
+
+void apds_proximity_disable() {
+  restartTransmit();
+  writeByte(APDS9960_ENABLE, 0x1);
+}
