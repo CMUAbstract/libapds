@@ -1,8 +1,9 @@
 LIB = libapds
 
 OBJECTS = \
-          min.o
-          #proximity.o \
+          min.o \
+          min_prox.o \
+          proximity.o \
           gesture.o \
           color.o \
 

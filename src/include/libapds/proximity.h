@@ -315,6 +315,7 @@ void enable_photoresistor(void);
 void disable_photoresistor(void); 
 void photores_setup(void);
 int16_t read_photoresistor(void);
+float read_photoresistor_fl(void);
 int8_t anomalyCheck(uint8_t, uint8_t, uint8_t);
 void check_mode(void);
 /*A couple of modules to make the msp i2c library feel more like the Arduino wire.h lib
