@@ -40,7 +40,6 @@ void enable_photoresistor(void){
 #else
 #error Unsupported photoresistor config
 #endif// BOARD_{MAJOR,MINOR}
-
 }
 
 void disable_photoresistor(void){
@@ -53,6 +52,7 @@ void disable_photoresistor(void){
 #else
 #error Unsupported photoresistor config
 #endif// BOARD_{MAJOR,MINOR}
+  STATE_CHANGE(photo,0);
 }
 
 void photores_setup(void){
