@@ -184,6 +184,26 @@ void proximity_init(void) {
 	return;
 }
 
+void proximity_init_slim(void) {
+	uint8_t sensorID = 0;
+	restartTransmit();
+	writeSingle(APDS9960_ID);
+	sensorID = readByte();
+  if(sensorID != 0xAB) {
+    PRINTF("error initializing APDS! id = %x\r\n",sensorID);
+    while(sensorID != 0xAB) {
+      restartTransmit();
+      writeSingle(APDS9960_ID);
+      sensorID = readByte();
+    }
+  }
+	restartTransmit();
+  writeByte(APDS9960_ENABLE, 0);
+  restartTransmit();
+  writeByte(APDS9960_CONTROL,0b11001100);
+  restartTransmit();
+  writeByte(APDS9960_ENABLE, 0x5);
+}
 
 void enableProximitySensor(void){
 	/*Set proximity gain*/

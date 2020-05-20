@@ -54,13 +54,13 @@ void disable_photoresistor(void){
 #endif// BOARD_{MAJOR,MINOR}
   STATE_CHANGE(photo,0);
 }
-
+/*
 void photores_setup(void){
   P3SEL0 |= BIT0;
   P3SEL1 |= BIT1;
   PM5CTL0 &= ~LOCKLPM5;
 }
-
+*/
 /*
  *@brief starts reading from the photoresistor ADC comparator pins
  *
@@ -95,11 +95,10 @@ float read_photoresistor_fl(void){
   ADC12CTL0 &= ~ADC12ENC;                 // Disable conversions
   ADC12CTL0 &= ~(ADC12ON);                // Shutdown ADC12
   REFCTL0 &= ~REFON;
-  PRINTF("val is : %u ",output);
   float new_ret = output;
   return new_ret;
 }
-
+/*
 int16_t read_photoresistor(void){
    ADC12CTL0 &= ~ADC12ENC;           // Disable conversions
 
@@ -132,4 +131,4 @@ int16_t read_photoresistor(void){
   REFCTL0 &= ~REFON;
   float new_ret = output;
   return new_ret;
-}
+}*/
