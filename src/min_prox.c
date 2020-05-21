@@ -81,6 +81,7 @@ void proximity_init(void) {
 	writeByte(APDS9960_POFFSET_UR, DEFAULT_POFFSET_UR);
 	writeByte(APDS9960_POFFSET_DL, DEFAULT_POFFSET_DL);
 	writeByte(APDS9960_CONFIG1, DEFAULT_CONFIG1);
+#if 0
 	restartTransmit();
 	writeSingle(APDS9960_CONTROL);
 	uint8_t val = readByte();
@@ -119,9 +120,14 @@ void proximity_init(void) {
 	writeByte(APDS9960_AIHTH, highByte);
 	writeByte(APDS9960_PERS, DEFAULT_PERS);
 	writeByte(APDS9960_CONFIG2, DEFAULT_CONFIG2);
+#endif
 	writeByte(APDS9960_CONFIG3, DEFAULT_CONFIG3);
+  restartTransmit();
+  writeByte(APDS9960_CONTROL,0b11001100);
+  restartTransmit();
+  writeByte(APDS9960_ENABLE, 0x5);
 
-
+#if 0
 	 /* switching to the gesture stuff*/
 	writeByte(APDS9960_GPENTH, DEFAULT_GPENTH);
 	writeByte(APDS9960_GEXTH, DEFAULT_GEXTH);
@@ -181,6 +187,7 @@ void proximity_init(void) {
 	writeSingle(APDS9960_ID);
 	val = readByte();
 	//loG("Val after prox enable = %x \r\n", val);
+#endif
 	return;
 }
 
