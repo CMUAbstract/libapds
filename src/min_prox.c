@@ -210,6 +210,7 @@ void proximity_init_slim(void) {
   writeByte(APDS9960_CONTROL,0b11001100);
   restartTransmit();
   writeByte(APDS9960_ENABLE, 0x5);
+  return;
 }
 
 void enableProximitySensor(void){
