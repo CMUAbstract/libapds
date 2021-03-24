@@ -81,7 +81,7 @@ void proximity_init(void) {
 	writeByte(APDS9960_POFFSET_UR, DEFAULT_POFFSET_UR);
 	writeByte(APDS9960_POFFSET_DL, DEFAULT_POFFSET_DL);
 	writeByte(APDS9960_CONFIG1, DEFAULT_CONFIG1);
-#if 0
+#if 1
 	restartTransmit();
 	writeSingle(APDS9960_CONTROL);
 	uint8_t val = readByte();
@@ -122,12 +122,14 @@ void proximity_init(void) {
 	writeByte(APDS9960_CONFIG2, DEFAULT_CONFIG2);
 #endif
 	writeByte(APDS9960_CONFIG3, DEFAULT_CONFIG3);
+  // Use this for high power, set if 1 on line 81 to 0
+#if 0
   restartTransmit();
   writeByte(APDS9960_CONTROL,0b11001100);
   restartTransmit();
   writeByte(APDS9960_ENABLE, 0x5);
-
-#if 0
+#endif
+#if 1
 	 /* switching to the gesture stuff*/
 	writeByte(APDS9960_GPENTH, DEFAULT_GPENTH);
 	writeByte(APDS9960_GEXTH, DEFAULT_GEXTH);
