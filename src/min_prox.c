@@ -264,6 +264,7 @@ void enableProximitySensor(void){
 	return;
 }
 
+#if 0
 float proximity_read() {
 	uint8_t val = 0;
 	restartTransmit();
@@ -272,6 +273,7 @@ float proximity_read() {
   float ret_val = val;
 	return ret_val;
 }
+#endif
 
 uint8_t proximity_read_byte() {
 	uint8_t val = 0;

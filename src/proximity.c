@@ -772,7 +772,8 @@ int8_t processGestureData(gesture_data_t gesture_data_) {
 #endif
 				return -1;
 		}
-#if MY_DEBUG
+			LOG("total gestures = %u\r\n", gesture_data_.total_gestures);
+#if 0
 			LOG("total gestures = %u\r\n", gesture_data_.total_gestures);
       LOG("U:");
 			for( i = 0 ; i < gesture_data_.total_gestures; i++ ) {

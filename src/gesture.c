@@ -4,6 +4,9 @@
 #include <libio/console.h>
 #include "gesture.h"
 #include "proximity.h"
+#include <libpacarana/pacarana.h>
+
+extern volatile __nv apds_status;
 
 #if BOARD_MAJOR != 2
 #error Functions undefined for board
@@ -16,6 +19,7 @@ void apds_init() {
   __delay_cycles(5000);
   proximity_init();
   enableGesture();
+  STATE_CHANGE(apds,1);
   return;
 }
 
@@ -28,6 +32,7 @@ void apds_disable() {
 #error apds_disable undefined for board
 #endif
   fxl_reset();
+  STATE_CHANGE(apds,0);
   return;
 }
 
@@ -57,7 +62,7 @@ gest_dir apds_get_gesture() {
   else { 
     gest_out = DIR_NONE;
   }
-  apds_disable();
+  //apds_disable();
   return gest_out;
 }
 
