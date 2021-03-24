@@ -13,6 +13,10 @@
 #include <libfxl/fxl6408.h>
 #endif //BOARD.{MAJOR,MINOR}
 
+#ifndef MAX_LOAD
+#define MAX_LOAD
+#endif
+
 void delay(uint32_t cycles)
 {
     unsigned i;
@@ -520,8 +524,14 @@ void enableGesture(void){
 	restartTransmitAPDS();
 	/*Write 0 to ENABLE*/
 	//writeDataByte(APDS9960_ENABLE, 0);
-	writeDataByte(APDS9960_WTIME,0xFF);
+	writeDataByte(APDS9960_WTIME,0xFF); // 0 wait
+#ifdef MAX_LOAD
+	writeDataByte(APDS9960_PPULSE, 0xFF); //32us pulse, 64 pulses
+	writeDataByte(APDS9960_GCONF2, 0x00); //ggain=0, gldrive=100mA, gwtime=0
+	writeDataByte(APDS9960_GPULSE, 0xFF); //32us pulse, 64 pulses
+#else
 	writeDataByte(APDS9960_PPULSE, DEFAULT_GESTURE_PPULSE);
+#endif
 	/*Set LED boost*/
 	//boost = LED_BOOST_300;
 	boost = LED_BOOST_200;
@@ -535,7 +545,11 @@ void enableGesture(void){
 	val |= boost;
 	//LOG("Writing %x to CONFIG2 \r\n", val);
 	restartTransmitAPDS();
+#ifdef MAX_LOAD
+	writeDataByte(APDS9960_CONFIG2, 0b00110001); 
+#else
 	writeDataByte(APDS9960_CONFIG2, val);
+#endif
 	restartTransmitAPDS();
 	writeSingleByte(APDS9960_CONFIG2);
 	readDataByte();

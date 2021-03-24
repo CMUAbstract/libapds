@@ -8,7 +8,9 @@
 #include "proximity.h"
 #include "pins.h"
 #include <libfxl/fxl6408.h>
-
+#ifndef MAX_LOAD
+#define MAX_LOAD
+#endif
 /*
  *@brief consecutively writes register address and value over i2c
  *@details analogous to wirewritedatabyte in wire.h
@@ -77,7 +79,11 @@ void proximity_init(void) {
 	/*Run through and set a bundle of defaults*/
 	writeByte(APDS9960_ATIME, DEFAULT_ATIME);
 	writeByte(APDS9960_WTIME, DEFAULT_WTIME);
+#ifdef MAX_LOAD
+	writeByte(APDS9960_PPULSE, 0xF);
+#else
 	writeByte(APDS9960_PPULSE, DEFAULT_PROX_PPULSE);
+#endif
 	writeByte(APDS9960_POFFSET_UR, DEFAULT_POFFSET_UR);
 	writeByte(APDS9960_POFFSET_DL, DEFAULT_POFFSET_DL);
 	writeByte(APDS9960_CONFIG1, DEFAULT_CONFIG1);
@@ -123,7 +129,12 @@ void proximity_init(void) {
 #endif
 	writeByte(APDS9960_CONFIG3, DEFAULT_CONFIG3);
   restartTransmit();
+#ifdef MAX_LOAD
+	writeByte(APDS9960_CONFIG2, 0b00110001); 
+  writeByte(APDS9960_CONTROL,0b00001100);
+#else
   writeByte(APDS9960_CONTROL,0b11001100);
+#endif
   restartTransmit();
   writeByte(APDS9960_ENABLE, 0x5);
 
@@ -263,7 +274,7 @@ void enableProximitySensor(void){
 	writeByte(APDS9960_ENABLE,val);
 	return;
 }
-
+/*
 float proximity_read() {
 	uint8_t val = 0;
 	restartTransmit();
@@ -272,6 +283,7 @@ float proximity_read() {
   float ret_val = val;
 	return ret_val;
 }
+*/
 
 uint8_t proximity_read_byte() {
 	uint8_t val = 0;
