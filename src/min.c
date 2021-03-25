@@ -10,7 +10,7 @@
 #include <libfxl/fxl6408.h>
 #include <libpacarana/pacarana.h>
 
-extern int photo_status;
+extern volatile __nv int photo_status;
 /*
  *@brief Sets up pin 3.0 to read from a photoresistor
  *@details Written based on egauge code found at github.com/CMUAbstract/egauge
@@ -98,7 +98,7 @@ float read_photoresistor_fl(void){
   float new_ret = output;
   return new_ret;
 }
-/*
+
 int16_t read_photoresistor(void){
    ADC12CTL0 &= ~ADC12ENC;           // Disable conversions
 
@@ -131,4 +131,4 @@ int16_t read_photoresistor(void){
   REFCTL0 &= ~REFON;
   float new_ret = output;
   return new_ret;
-}*/
+}
