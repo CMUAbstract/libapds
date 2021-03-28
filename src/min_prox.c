@@ -129,7 +129,7 @@ void proximity_init(void) {
   restartTransmit();
   writeByte(APDS9960_ENABLE, 0x5);
 #endif
-#if 1
+#if 0
 	 /* switching to the gesture stuff*/
 	writeByte(APDS9960_GPENTH, DEFAULT_GPENTH);
 	writeByte(APDS9960_GEXTH, DEFAULT_GEXTH);

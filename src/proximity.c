@@ -237,6 +237,7 @@ float proximity_read() {
 	restartTransmitAPDS();
 	writeSingleByte(APDS9960_PDATA);
 	val = readDataByte();
+  printf("Val is: %u\r\n",val);
 	return (float)val;
 }
 
