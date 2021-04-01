@@ -17,7 +17,7 @@ void apds_init() {
   __delay_cycles(5000);
   fxl_set(BIT_APDS_SW);
   __delay_cycles(5000);
-  proximity_init();
+  proximity_init_forGest();
   enableGesture();
   STATE_CHANGE(apds,1);
   return;

@@ -297,6 +297,7 @@ int gesture_motion_;
 /*Helper functions for handling proximity sensor*/
 void proximity_init(void);
 void proximity_init_ldrive(uint8_t drive);
+void proximity_init_forGest(void);
 int8_t  getGesture(gesture_data_t *gesture_data_, uint8_t *num_samps);
 void enableGesture(void);
 void enableGesture_boost(uint8_t boost);

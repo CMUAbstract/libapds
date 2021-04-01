@@ -36,7 +36,7 @@ void enable_photoresistor(void){
   GPIO(PORT_PHOTO_SENSE,SEL0) |= BIT(PIN_PHOTO_SENSE);
   GPIO(PORT_PHOTO_SENSE,SEL1) |= BIT(PIN_PHOTO_SENSE);
   __delay_cycles(1000);                   // Delay for Ref to settle
-  STATE_CHANGE(photo,2);
+  STATE_CHANGE(photo,1);
 #else
 #error Unsupported photoresistor config
 #endif// BOARD_{MAJOR,MINOR}
