@@ -280,20 +280,23 @@ int8_t  getGestureLoop(gesture_data_t *gesture_data_, uint8_t *num_samps){
 	}
 	uint8_t loop_count = 0;
 	/*while loop start*/
+  uint16_t its = 0;
 	while(1){
+	//for(int loop_cnt = 1; loop_cnt < 100; loop_cnt++){
 		delay(240000);
 		uint8_t fifo_level = 0;
 		restartTransmitAPDS();
 		writeSingleByte(APDS9960_GSTATUS);
 		uint8_t gstatus = readDataByte();
 		LOG2("gstatus val 1 = %x \r\n",gstatus);
-		if((gstatus & APDS9960_GVALID) == APDS9960_GVALID){
+		if((gstatus & APDS9960_GVALID) == APDS9960_GVALID && its < 5){
+      its++;
 			restartTransmitAPDS();
 			writeSingleByte(APDS9960_GFLVL);
 			fifo_level = readDataByte();
 			uint8_t fifo_data[MAX_DATA_SETS << 2], i;
-			LOG2("Fifo level = %u %u\r\n",fifo_level,loop_count);
-			if(fifo_level > 1 ){
+			LOG("Fifo level = %u %u\r\n",fifo_level,its);
+			if(fifo_level > 7){
 				loop_count++;
 				/*Read in all of the bytes from the fifo*/
 				restartTransmitAPDS();
@@ -774,7 +777,7 @@ int8_t processGestureData(gesture_data_t gesture_data_) {
 				return -1;
 		}
 			LOG("total gestures = %u\r\n", gesture_data_.total_gestures);
-#if 1
+#if 0
 			LOG("total gestures = %u\r\n", gesture_data_.total_gestures);
       LOG("U:");
 			for( i = 0 ; i < gesture_data_.total_gestures; i++ ) {
