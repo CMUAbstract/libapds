@@ -228,9 +228,6 @@ void enableProximitySensor(void){
 	restartTransmit();
 	writeByte(APDS9960_CONTROL, val);
 	/*Set LED drive*/
-	restartTransmit();
-	writeSingle(APDS9960_CONTROL);
-	val = readByte();
 	/*Set led drive*/
 	drive = DEFAULT_LDRIVE;
 	drive = drive << 6;
@@ -254,13 +251,7 @@ void enableProximitySensor(void){
   /*Disable the power if we're turning off the peripherals*/
   val &= ~(1 << POWER);
 #endif
-	restartTransmit();
-	writeByte(APDS9960_ENABLE,val);
-	/*Set proximity mode*/
-	restartTransmit();
-  writeSingle(APDS9960_ENABLE);
-	val = readByte();
-	val |= (1 << PROXIMITY);
+  val |= (1 << PROXIMITY);
 	restartTransmit();
 	writeByte(APDS9960_ENABLE,val);
 	return;
