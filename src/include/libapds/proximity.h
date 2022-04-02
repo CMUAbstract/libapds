@@ -104,9 +104,10 @@
 #define APDS9960_GVALID         0b00000001
 
 /* On/Off definitions */
+#if 0 //Turn off for compiling with other libs that define "off"
 #define OFF                     0
 #define ON                      1
-
+#endif
 /* Acceptable parameters for setMode */
 #define POWER                   0
 #define AMBIENT_LIGHT           1

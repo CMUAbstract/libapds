@@ -8,9 +8,9 @@
 #include "proximity.h"
 #include "pins.h"
 #include <libfxl/fxl6408.h>
-#include <libpacarana/pacarana.h>
+//#include <libpacarana/pacarana.h>
 
-extern int photo_status;
+//extern int photo_status;
 /*
  *@brief Sets up pin 3.0 to read from a photoresistor
  *@details Written based on egauge code found at github.com/CMUAbstract/egauge
@@ -36,7 +36,7 @@ void enable_photoresistor(void){
   GPIO(PORT_PHOTO_SENSE,SEL0) |= BIT(PIN_PHOTO_SENSE);
   GPIO(PORT_PHOTO_SENSE,SEL1) |= BIT(PIN_PHOTO_SENSE);
   __delay_cycles(1000);                   // Delay for Ref to settle
-  STATE_CHANGE(photo,2);
+  //STATE_CHANGE(photo,2);
 #else
 #error Unsupported photoresistor config
 #endif// BOARD_{MAJOR,MINOR}
@@ -52,7 +52,7 @@ void disable_photoresistor(void){
 #else
 #error Unsupported photoresistor config
 #endif// BOARD_{MAJOR,MINOR}
-  STATE_CHANGE(photo,0);
+  //STATE_CHANGE(photo,0);
 }
 /*
 void photores_setup(void){
@@ -98,7 +98,7 @@ float read_photoresistor_fl(void){
   float new_ret = output;
   return new_ret;
 }
-/*
+
 int16_t read_photoresistor(void){
    ADC12CTL0 &= ~ADC12ENC;           // Disable conversions
 
@@ -129,6 +129,6 @@ int16_t read_photoresistor(void){
   ADC12CTL0 &= ~ADC12ENC;                 // Disable conversions
   ADC12CTL0 &= ~(ADC12ON);                // Shutdown ADC12
   REFCTL0 &= ~REFON;
-  float new_ret = output;
-  return new_ret;
-}*/
+  //float new_ret = output;
+  return output;
+}
